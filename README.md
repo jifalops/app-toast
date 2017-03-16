@@ -10,6 +10,8 @@ bower install --save app-toast
 
 ## Usage
 * Drop `app-toast` in and call the `show()` method.
+* Use [app-toasts](https://www.webcomponents.org/element/jifalops/app-toasts)
+  for preset themes.
 
 ## Demo
 <!--
