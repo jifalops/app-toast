@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>app-toast demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../app-toast.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic app-toast demo</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="ex1">
+          <app-toast id="toast"></app-toast>
+          <select id="icon">
+            <option>No icon</option>
+            <option selected>check-circle</option>
+            <option>check</option>
+            <option>check-box</option>
+            <option>info</option>
+            <option>info-outline</option>
+            <option>warning</option>
+            <option>error</option>
+            <option>error-outline</option>
+          </select><br/>
+          <input id="text" placeholder="text" value="text"/><br/>
+          <input id="duration" placeholder="duration (ms)" value="3000"/><br/>
+          <input id="actionText" placeholder="action button text" value="action"/><br/>
+          <label><input id="showCancel" type="checkbox"/>Show cancel</label><br/>
+          <label><input id="disableSwipe" type="checkbox"/>Disable swipe</label><br/>
+          <label><input id="fitBottom" type="checkbox"/>Fit to bottom</label><br/>
+          <button onclick="showToast()">Show</button>&nbsp;
+          <button onclick="showWithProperties()">Show with properties</button>&nbsp;
+          <button onclick="closeToast()">Close</button><br/>
+          Last Event: <span id="feedback"></span>
+          <script>
+            var toast = document.getElementById('toast');
+            var icon = document.getElementById('icon');
+            var text = document.getElementById('text');
+            var duration = document.getElementById('duration');
+            var actionText = document.getElementById('actionText');
+            var showCancel = document.getElementById('showCancel');
+            var disableSwipe = document.getElementById('disableSwipe');
+            var fitBottom = document.getElementById('fitBottom');
+            var feedback = document.getElementById('feedback');
+            function showToast() {
+              var tmp = icon.options[icon.selectedIndex].text;
+              toast.icon = tmp == 'No icon' ? '' : tmp;
+              toast.text = text.value;
+              toast.duration = Number(duration.value);
+              toast.actionText = actionText.value;
+              toast.showCancel = showCancel.checked;
+              toast.disableSwipe = disableSwipe.checked;
+              toast.fitBottom = fitBottom.checked;
+              toast.onAction = function() { feedback.innerText = "onAction()"; };
+              toast.onCancel = function() { feedback.innerText = "onCancel()"; };
+              toast.show();
+            }
+            function showWithProperties() {
+              var tmp = icon.options[icon.selectedIndex].text;
+              toast.show({
+                icon: tmp == 'No icon' ? '' : tmp,
+                text: text.value,
+                duration: Number(duration.value),
+                actionText: actionText.value,
+                showCancel: showCancel.checked,
+                disableSwipe: disableSwipe.checked,
+                fitBottom: fitBottom.checked,
+                onAction: function() { feedback.innerText = "onAction()"; },
+                onCancel: function() { feedback.innerText = "onCancel()"; }
+              });
+            }
+            function closeToast() {
+              toast.close();
+            }
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
