@@ -186,6 +186,22 @@ Custom property | Description
       },
 
       /**
+       * Reset properties to their defaults.
+       */
+      reset: function() {
+        this.icon = '';
+        this.iconset = 'toast-icons';
+        this.text = '';
+        this.duration = 3000;
+        this.actionText = '';
+        this.onAction = null;
+        this.onCancel = null;
+        this.showCancel = false;
+        this.fitBottom = false;
+        this.disableSwipe = false;
+      },
+
+      /**
        * Set the specified set of properties and show the toast.
        * The properties object can contain properties of this element
        * and the underlying paper-toast.
@@ -209,7 +225,6 @@ Custom property | Description
       close: function() {
         this.$.toast.close();
       },
-
 
       _cancel: function(e) {
         // console.log('canceled.');
