@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 
 <!--
 `<iron-swipeable-container>` is a container that allows any of its nested
@@ -65,73 +65,75 @@ want to be swiped:
 </dom-module>
 
 <script>
+class IronSwipeableContainer2 extends Polymer.Element {
 
-  Polymer({
-    is: 'iron-swipeable-container2',
+    static get is() { return 'iron-swipeable-container2'; }
 
-    /**
-     * Fired when a child element is swiped away.
-     *
-     * @event iron-swipe
-     */
+    static get properties() {
+      return {
+        /**
+         * The style in which to swipe the card. Currently supported
+         * options are `curve | horizontal`. If left unspecified, the default
+         * is assumed to be `horizontal`.
+         */
+        swipeStyle: {
+         type: String,
+         value: 'horizontal'
+        },
 
-    properties: {
-      /**
-       * The style in which to swipe the card. Currently supported
-       * options are `curve | horizontal`. If left unspecified, the default
-       * is assumed to be `horizontal`.
-       */
-      swipeStyle: {
-       type: String,
-       value: 'horizontal'
-      },
+        /**
+         * If true, then the container will not allow swiping.
+         */
+        disabled: {
+          type: Boolean,
+          value: false
+        },
 
-      /**
-       * If true, then the container will not allow swiping.
-       */
-      disabled: {
-        type: Boolean,
-        value: false
-      },
+        /**
+         * The ratio of the width of the element that the translation animation
+         * should happen over. For example, if the `widthRatio` is 3, the
+         * animation will take place on a distance 3 times the width of the
+         * element being swiped.
+         */
+        widthRatio: {
+         type: Number,
+         value: 3
+        },
 
-      /**
-       * The ratio of the width of the element that the translation animation
-       * should happen over. For example, if the `widthRatio` is 3, the
-       * animation will take place on a distance 3 times the width of the
-       * element being swiped.
-       */
-      widthRatio: {
-       type: Number,
-       value: 3
-      },
+        /**
+         * The ratio of the total animation distance after which the opacity
+         * transformation begins. For example, if the `widthRatio` is 1 and
+         * the `opacityRate` is 0.5, then the element needs to travel half its
+         * width before its opacity starts decreasing.
+         */
+        opacityRate: {
+         type: Number,
+         value: 0.2
+        },
 
-      /**
-       * The ratio of the total animation distance after which the opacity
-       * transformation begins. For example, if the `widthRatio` is 1 and
-       * the `opacityRate` is 0.5, then the element needs to travel half its
-       * width before its opacity starts decreasing.
-       */
-      opacityRate: {
-       type: Number,
-       value: 0.2
-      },
+        /**
+         * The CSS transition applied while swiping.
+         */
+        transition: {
+          type: String,
+          value: '300ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+        }
+      };
+    }
 
-      /**
-       * The CSS transition applied while swiping.
-       */
-      transition: {
-        type: String,
-        value: '300ms cubic-bezier(0.4, 0.0, 0.2, 1)'
-      }
-    },
+    static get observers() {
+      return [
 
-    ready: function() {
+      ];
+    }
+
+    ready() {
       this._transitionProperty = 'opacity, transform';
       this._swipeComplete = false;
       this._direction = '';
-    },
+    }
 
-    attached: function() {
+    attached() {
       this._nodeObserver = Polymer.dom(this.$.content).observeNodes(
           function(mutations) {
             for (var i = 0; i < mutations.addedNodes.length; i++) {
@@ -141,9 +143,9 @@ want to be swiped:
               this._removeListeners(mutations.removedNodes[i]);
             }
           }.bind(this));
-    },
+    }
 
-    _addListeners: function(node) {
+    _addListeners(node) {
       if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.COMMENT_NODE)
         return;
       // Set up the animation.
@@ -152,23 +154,23 @@ want to be swiped:
 
       this.listen(node, 'track', '_onTrack');
       this.listen(node, 'transitionend', '_onTransitionEnd');
-    },
+    }
 
-    _removeListeners: function(node) {
+    _removeListeners(node) {
       if (node.nodeType === Node.TEXT_NODE)
         return;
       this.unlisten(node, 'track', '_onTrack');
       this.unlisten(node, 'transitionend', '_onTransitionEnd');
-    },
+    }
 
-    detached: function() {
+    detached() {
       if (this._nodeObserver) {
         Polymer.dom(this.$.content).unobserveNodes(this._nodeObserver);
         this._nodeObserver = null;
       }
-    },
+    }
 
-    _onTrack: function(event) {
+    _onTrack(event) {
       if (this.disabled)
         return;
 
@@ -184,27 +186,27 @@ want to be swiped:
       } else if (track.state === 'end') {
         this._trackEnd(track, target);
       }
-    },
+    }
 
-    _trackStart: function(event, target) {
+    _trackStart(event, target) {
       // Save the width of the element, so that we don't trigger a style
       // recalc every time we need it.
       this._nodeWidth = target.offsetWidth;
       target.style.transition = 'none';
-    },
+    }
 
-    _trackMove: function(event, target) {
+    _trackMove(event, target) {
       this._animate(event.dx, target);
-    },
+    }
 
-    _trackEnd: function(event, target) {
+    _trackEnd(event, target) {
       // The element is swiped away if it's moved halfway its total width.
       this._swipeComplete = Math.abs(event.dx) > this._nodeWidth / 2;
       this._direction = event.dx > 0;
       this._swipeEnd(target);
-    },
+    }
 
-    _animate: function(x, target) {
+    _animate(x, target) {
       var direction = x > 0 ? 1 : -1;
 
       // This is the total distance the animation will take place over.
@@ -234,9 +236,9 @@ want to be swiped:
       }
 
       this.transform(translate + rotate, target);
-    },
+    }
 
-    _swipeEnd: function(target) {
+    _swipeEnd(target) {
       // Restore the original transition;
       target.style.transition = this.transition;
 
@@ -248,9 +250,9 @@ want to be swiped:
       } else {
         this._animate(0, target);
       }
-    },
+    }
 
-    _onTransitionEnd: function(event) {
+    _onTransitionEnd(event) {
       var target = event.currentTarget;
 
       if (this._swipeComplete && event.propertyName === 'opacity') {
@@ -262,5 +264,12 @@ want to be swiped:
       }
     }
 
-  });
+    /**
+     * Fired when a child element is swiped away.
+     *
+     * @event iron-swipe
+     */
+  }
+
+  window.customElements.define(IronSwipeableContainer2.is, IronSwipeableContainer2);
 </script>

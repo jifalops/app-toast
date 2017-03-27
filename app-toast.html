@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-styles/typography.html">
@@ -100,10 +100,12 @@ Custom property | Description
 
   </template>
   <script>
-    Polymer({
-      is: 'app-toast',
+  class AppToast extends Polymer.Element {
 
-      properties: {
+    static get is() { return 'app-toast'; }
+
+    static get properties() {
+      return {
         /**
          * The icon to use from the iconset.
          */
@@ -183,83 +185,91 @@ Custom property | Description
           value: false,
           reflectToAttribute: true
         }
-      },
+      };
+    }
 
-      /**
-       * Reset properties to their defaults.
-       */
-      reset: function() {
-        this.icon = '';
-        this.iconset = 'toast-icons';
-        this.text = '';
-        this.duration = 3000;
-        this.actionText = '';
-        this.onAction = null;
-        this.onCancel = null;
-        this.showCancel = false;
-        this.fitBottom = false;
-        this.disableSwipe = false;
-      },
+    static get observers() {
+      return [
 
-      /**
-       * Set the specified set of properties and show the toast.
-       * The properties object can contain properties of this element
-       * and the underlying paper-toast.
-       */
-      show: function(properties) {
-        if (properties) {
-          for (var property in properties) {
-            if (property in this && property.indexOf('_') === -1) {
-              this[property] = properties[property];
-              delete properties[property];
-            }
+      ];
+    }
+    /**
+     * Reset properties to their defaults.
+     */
+    reset() {
+      this.icon = '';
+      this.iconset = 'toast-icons';
+      this.text = '';
+      this.duration = 3000;
+      this.actionText = '';
+      this.onAction = null;
+      this.onCancel = null;
+      this.showCancel = false;
+      this.fitBottom = false;
+      this.disableSwipe = false;
+    }
+
+    /**
+     * Set the specified set of properties and show the toast.
+     * The properties object can contain properties of this element
+     * and the underlying paper-toast.
+     */
+    show(properties) {
+      if (properties) {
+        for (var property in properties) {
+          if (property in this && property.indexOf('_') > 0) {
+            this[property] = properties[property];
+            delete properties[property];
           }
         }
-        this.$.toast.style.opacity = 1;
-        this.$.toast.show(properties);
-      },
-
-      /**
-       * Close the toast programatically.
-       */
-      close: function() {
-        this.$.toast.close();
-      },
-
-      _cancel: function(e) {
-        // console.log('canceled.');
-        this.$.toast.close();
-        this.onCancel && this.onCancel(e);
-      },
-
-
-      _onAction: function(e) {
-        this.onAction && this.onAction(e);
-      },
-
-      _fitBottomChanged: function(fitBottom) {
-        if (fitBottom) {
-          this.$.toast.classList.add('fit-bottom');
-        } else {
-          this.$.toast.classList.remove('fit-bottom');
-        }
-      },
-
-      __onSwiped: function(e, data) {
-        // console.log('swiped:');
-        this.$.toast.style.opacity = 0;
-        this._wasSwiped = true;
-        this.close();
-      },
-
-      __onClosed: function(e, data) {
-        // console.log('overlay closed:', data);
-        if (this._wasSwiped) {
-          this._cancel(e);
-          this._wasSwiped = false;
-        }
-        // this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
       }
-    });
+      this.$.toast.style.opacity = 1;
+      this.$.toast.show(properties);
+    }
+
+    /**
+     * Close the toast programatically.
+     */
+    close() {
+      this.$.toast.close();
+    }
+
+    _cancel(e) {
+      // console.log('canceled.');
+      this.$.toast.close();
+      this.onCancel && this.onCancel(e);
+    }
+
+
+    _onAction(e) {
+      this.onAction && this.onAction(e);
+    }
+
+    _fitBottomChanged(fitBottom) {
+      if (fitBottom) {
+        this.$.toast.classList.add('fit-bottom');
+      } else {
+        this.$.toast.classList.remove('fit-bottom');
+      }
+    }
+
+    __onSwiped(e, data) {
+      // console.log('swiped:');
+      this.$.toast.style.opacity = 0;
+      this._wasSwiped = true;
+      this.close();
+    }
+
+    __onClosed(e, data) {
+      // console.log('overlay closed:', data);
+      if (this._wasSwiped) {
+        this._cancel(e);
+        this._wasSwiped = false;
+      }
+      // this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
+    }
+  }
+
+  window.customElements.define(AppToast.is, AppToast);
   </script>
 </dom-module>
