@@ -3,6 +3,7 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="iron-swipeable-container2.html">
 <link rel="import" href="toast-icons.html">
 
@@ -40,8 +41,9 @@ Custom property | Description
         @apply --layout-center;
         @apply --app-toast;
       }
-      paper-toast > span {
+      .content-container {
         @apply --layout-flex;
+        @apply --layout-vertical;
       }
       paper-button {
         color: var(--accent-color);
@@ -74,17 +76,27 @@ Custom property | Description
 
           <iron-icon
             id="mainIcon"
-            icon="[[iconset]]:[[icon]]"
-            hidden$="[[!icon]]">
+            icon="[[_getIcon(iconset, icon)]]"
+            src="[[src]]"
+            hidden$="[[_hideIcon(icon, src)]]">
           </iron-icon>
 
-          <span>[[text]]</span>
-
+          <div class="content-container">
+            <slot></slot>
+            <span>[[text]]</span>
+          </div>
           <paper-button
             id="actionButton"
             on-tap="_onAction"
             hidden$="[[!actionText]]">
             [[actionText]]
+          </paper-button>
+
+          <paper-button
+            id="action2Button"
+            on-tap="_onAction2"
+            hidden$="[[!action2Text]]">
+            [[action2Text]]
           </paper-button>
 
           <iron-icon
@@ -104,6 +116,10 @@ Custom property | Description
       is: 'app-toast',
 
       properties: {
+        /**
+         * The src of the main iron-icon.
+         */
+        src: String,
         /**
          * The icon to use from the iconset.
          */
@@ -142,9 +158,25 @@ Custom property | Description
         },
 
         /**
+         * The text of the action2 button.
+         */
+        action2Text: {
+          type: String,
+          value: ''
+        },
+
+        /**
          * The callback for the action button.
          */
         onAction: {
+          type: Object,
+          value: null
+        },
+
+        /**
+         * The callback for the action2 button.
+         */
+        onAction2: {
           type: Object,
           value: null
         },
@@ -185,20 +217,28 @@ Custom property | Description
         }
       },
 
+      attached: function() {
+        this._defaultProperties = {
+          icon: this.icon,
+          iconset: this.iconset,
+          text: this.text,
+          duration: this.duration,
+          actionText: this.actionText,
+          action2Text: this.action2Text,
+          onAction: this.onAction,
+          onAction2: this.onAction2,
+          onCancel: this.onCancel,
+          showCancel: this.showCancel,
+          fitBottom: this.fitBottom,
+          disableSwipe: this.disableSwipe,
+        };
+      },
+
       /**
        * Reset properties to their defaults.
        */
       reset: function() {
-        this.icon = '';
-        this.iconset = 'toast-icons';
-        this.text = '';
-        this.duration = 3000;
-        this.actionText = '';
-        this.onAction = null;
-        this.onCancel = null;
-        this.showCancel = false;
-        this.fitBottom = false;
-        this.disableSwipe = false;
+        this._setProperties(this._defaultProperties);
       },
 
       /**
@@ -207,14 +247,7 @@ Custom property | Description
        * and the underlying paper-toast.
        */
       show: function(properties) {
-        if (properties) {
-          for (var property in properties) {
-            if (property in this && property.indexOf('_') === -1) {
-              this[property] = properties[property];
-              delete properties[property];
-            }
-          }
-        }
+        this._setProperties(properties);
         this.$.toast.style.opacity = 1;
         this.$.toast.show(properties);
       },
@@ -237,12 +270,35 @@ Custom property | Description
         this.onAction && this.onAction(e);
       },
 
+      _onAction2: function(e) {
+        this.onAction2 && this.onAction2(e);
+      },
+
       _fitBottomChanged: function(fitBottom) {
         if (fitBottom) {
           this.$.toast.classList.add('fit-bottom');
         } else {
           this.$.toast.classList.remove('fit-bottom');
         }
+      },
+
+      _setProperties: function(properties) {
+        if (properties) {
+          for (var property in properties) {
+            if (property in this && property.indexOf('_') === -1) {
+              this[property] = properties[property];
+              delete properties[property];
+            }
+          }
+        }
+      },
+
+      _getIcon: function(iconset, icon) {
+        return (iconset && icon) ? iconset +':'+ icon : '';
+      },
+
+      _hideIcon: function(icon, src) {
+        return !(icon || src);
       },
 
       __onSwiped: function(e, data) {
@@ -258,7 +314,7 @@ Custom property | Description
           this._cancel(e);
           this._wasSwiped = false;
         }
-        // this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
+        this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
       }
     });
   </script>
