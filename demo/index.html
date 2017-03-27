@@ -82,7 +82,7 @@
               toast.onAction = function() { feedback.innerText = "onAction()"; };
               toast.onAction2 = function() { feedback.innerText = "onAction2()"; };
               toast.onCancel = function() { feedback.innerText = "onCancel()"; };
-              toast.onTap = function() { feedback.innerText = "onTap()"; };
+              toast.onTapped = function() { feedback.innerText = "onTapped()"; };
               toast.show();
             }
             function showWithProperties() {
@@ -101,7 +101,7 @@
                 onAction: function() { feedback.innerText = "onAction()"; },
                 onAction2: function() { feedback.innerText = "onAction2()"; },
                 onCancel: function() { feedback.innerText = "onCancel()"; },
-                onTap: function() { feedback.innerText = "onTap()"; }
+                onTapped: function() { feedback.innerText = "onTapped()"; }
               });
             }
             function closeToast() {

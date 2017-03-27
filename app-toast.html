@@ -195,7 +195,7 @@ Custom property | Description
         /**
          * Called when the toast is tapped, excludes action and cancel buttons.
          */
-        onTap: {
+        onTapped: {
           type: Object,
           value: null
         },
@@ -238,7 +238,7 @@ Custom property | Description
           onAction: this.onAction,
           onAction2: this.onAction2,
           onCancel: this.onCancel,
-          onTap: this.onTap,
+          onTapped: this.onTapped,
           showCancel: this.showCancel,
           fitBottom: this.fitBottom,
           disableSwipe: this.disableSwipe,
@@ -340,7 +340,7 @@ Custom property | Description
 
       __onTap: function(e) {
         // console.log('tapped', e);
-        this.onTap && this.onTap(e);
+        this.onTapped && this.onTapped(e);
         this.fire('toast-tap');
       }
 
