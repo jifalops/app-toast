@@ -57,7 +57,7 @@ Custom property | Description
       #cancelIcon {
         --iron-icon-height: 14px;
         --iron-icon-width: 14px;
-        vertical-align: super;
+        /*vertical-align: super;*/
         margin-left: 2px;
         padding: 2px;
         @apply --app-toast-cancel-icon;
@@ -72,6 +72,7 @@ Custom property | Description
         <paper-toast
           id="toast"
           duration="[[duration]]"
+          on-tap="__onTap"
           on-iron-overlay-closed="__onClosed">
 
           <iron-icon
@@ -85,6 +86,7 @@ Custom property | Description
             <slot></slot>
             <span>[[text]]</span>
           </div>
+
           <paper-button
             id="actionButton"
             on-tap="_onAction"
@@ -102,7 +104,7 @@ Custom property | Description
           <iron-icon
             id="cancelIcon"
             icon="toast-icons:close"
-            on-tap="_cancel"
+            on-tap="_cancelTapped"
             hidden$="[[!showCancel]]">
           </iron-icon>
         </paper-toast>
@@ -191,6 +193,14 @@ Custom property | Description
         },
 
         /**
+         * Called when the toast is tapped, excludes action and cancel buttons.
+         */
+        onTap: {
+          type: Object,
+          value: null
+        },
+
+        /**
          * Whether to show the cancel icon.
          */
         showCancel: {
@@ -228,6 +238,7 @@ Custom property | Description
           onAction: this.onAction,
           onAction2: this.onAction2,
           onCancel: this.onCancel,
+          onTap: this.onTap,
           showCancel: this.showCancel,
           fitBottom: this.fitBottom,
           disableSwipe: this.disableSwipe,
@@ -259,19 +270,29 @@ Custom property | Description
         this.$.toast.close();
       },
 
+      _cancelTapped: function(e) {
+        e.stopPropagation();
+        this._cancel(e);
+      },
+
       _cancel: function(e) {
         // console.log('canceled.');
         this.$.toast.close();
         this.onCancel && this.onCancel(e);
+        this.fire('toast-cancel');
       },
 
 
       _onAction: function(e) {
+        e.stopPropagation();
         this.onAction && this.onAction(e);
+        this.fire('toast-action');
       },
 
       _onAction2: function(e) {
+        e.stopPropagation();
         this.onAction2 && this.onAction2(e);
+        this.fire('toast-action2');
       },
 
       _fitBottomChanged: function(fitBottom) {
@@ -285,7 +306,7 @@ Custom property | Description
       _setProperties: function(properties) {
         if (properties) {
           for (var property in properties) {
-            if (property in this && property.indexOf('_') === -1) {
+            if (property in this && property.indexOf('_') != 0) {
               this[property] = properties[property];
               delete properties[property];
             }
@@ -315,7 +336,34 @@ Custom property | Description
           this._wasSwiped = false;
         }
         this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
+      },
+
+      __onTap: function(e) {
+        // console.log('tapped', e);
+        this.onTap && this.onTap(e);
+        this.fire('toast-tap');
       }
+
+      /**
+       * Triggered when the paper-toast is tapped.
+       *
+       * @event toast-tap
+       */
+      /**
+       * Triggered when the paper-toast is canceled.
+       *
+       * @event toast-cancel
+       */
+      /**
+       * Triggered when the action button is tapped.
+       *
+       * @event toast-action
+       */
+      /**
+       * Triggered when the action2 button is tapped.
+       *
+       * @event toast-action2
+       */
     });
   </script>
 </dom-module>

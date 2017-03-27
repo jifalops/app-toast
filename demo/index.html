@@ -62,6 +62,11 @@
             var div = document.createElement('div');
             Polymer.dom(toast).appendChild(div);
 
+            toast.addEventListener('toast-tap', function() { feedback.innerText += ', on-toast-tap'; });
+            toast.addEventListener('toast-cancel', function() { feedback.innerText += ', on-toast-cancel'; });
+            toast.addEventListener('toast-action', function() { feedback.innerText += ', on-toast-action'; });
+            toast.addEventListener('toast-action2', function() { feedback.innerText += ', on-toast-action2'; });
+
             function showToast() {
               div.innerHTML = htmlContent.value;
               var tmp = icon.options[icon.selectedIndex].text;
@@ -77,6 +82,7 @@
               toast.onAction = function() { feedback.innerText = "onAction()"; };
               toast.onAction2 = function() { feedback.innerText = "onAction2()"; };
               toast.onCancel = function() { feedback.innerText = "onCancel()"; };
+              toast.onTap = function() { feedback.innerText = "onTap()"; };
               toast.show();
             }
             function showWithProperties() {
@@ -94,7 +100,8 @@
                 fitBottom: fitBottom.checked,
                 onAction: function() { feedback.innerText = "onAction()"; },
                 onAction2: function() { feedback.innerText = "onAction2()"; },
-                onCancel: function() { feedback.innerText = "onCancel()"; }
+                onCancel: function() { feedback.innerText = "onCancel()"; },
+                onTap: function() { feedback.innerText = "onTap()"; }
               });
             }
             function closeToast() {
