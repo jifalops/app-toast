@@ -121,13 +121,14 @@ Custom property | Description
         /**
          * The src of the main iron-icon.
          */
-        src: String,
+        src: {
+          type: String
+        },
         /**
          * The icon to use from the iconset.
          */
         icon: {
-          type: String,
-          value: ''
+          type: String
         },
 
         /**
@@ -141,7 +142,9 @@ Custom property | Description
         /**
          * The toast's text.
          */
-        text: String,
+        text:  {
+          type: String
+        },
 
         /**
          * The duration in milliseconds to show the toast.
@@ -155,16 +158,14 @@ Custom property | Description
          * The text of the action button.
          */
         actionText: {
-          type: String,
-          value: ''
+          type: String
         },
 
         /**
          * The text of the action2 button.
          */
         action2Text: {
-          type: String,
-          value: ''
+          type: String
         },
 
         /**
@@ -216,7 +217,7 @@ Custom property | Description
           value: false,
           observer: '_fitBottomChanged'
         },
-
+        
         /**
          * Whether swiping should be disabled.
          */
@@ -227,40 +228,14 @@ Custom property | Description
         }
       },
 
-      attached: function() {
-        this._defaultProperties = {
-          icon: this.icon,
-          iconset: this.iconset,
-          text: this.text,
-          duration: this.duration,
-          actionText: this.actionText,
-          action2Text: this.action2Text,
-          onAction: this.onAction,
-          onAction2: this.onAction2,
-          onCancel: this.onCancel,
-          onTapped: this.onTapped,
-          showCancel: this.showCancel,
-          fitBottom: this.fitBottom,
-          disableSwipe: this.disableSwipe,
-        };
-      },
-
-      /**
-       * Reset properties to their defaults.
-       */
-      reset: function() {
-        this._setProperties(this._defaultProperties);
-      },
-
       /**
        * Set the specified set of properties and show the toast.
        * The properties object can contain properties of this element
        * and the underlying paper-toast.
        */
-      show: function(properties) {
-        this._setProperties(properties);
+      show: function() {
         this.$.toast.style.opacity = 1;
-        this.$.toast.show(properties);
+        this.$.toast.show();
       },
 
       /**
@@ -300,17 +275,6 @@ Custom property | Description
           this.$.toast.classList.add('fit-bottom');
         } else {
           this.$.toast.classList.remove('fit-bottom');
-        }
-      },
-
-      _setProperties: function(properties) {
-        if (properties) {
-          for (var property in properties) {
-            if (property in this && property.indexOf('_') != 0) {
-              this[property] = properties[property];
-              delete properties[property];
-            }
-          }
         }
       },
 
