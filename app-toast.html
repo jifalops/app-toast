@@ -58,7 +58,6 @@ Custom property | Description
         padding: 2px;
         @apply --app-toast-cancel-icon;
       }
-      
       /*HACK*/
       [hidden] {
         display: none !important;
@@ -209,15 +208,23 @@ Custom property | Description
           reflectToAttribute: true
         }
       },
-
+      
+      /**
+       * just open the toast with the passed properties
+       */
+      open: function () {
+        this.$.toast.style.opacity = 1;
+        this.$.toast.open();
+      },
+      
       /**
        * Set the specified set of properties and show the toast.
        * The properties object can contain properties of this element
        * and the underlying paper-toast.
        */
-      show: function () {
+      show: function (properties) {
         this.$.toast.style.opacity = 1;
-        this.$.toast.show();
+        this.$.toast.show(properties);
       },
 
       /**
