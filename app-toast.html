@@ -25,9 +25,7 @@ Custom property | Description
 <dom-module id="app-toast">
   <template>
     <style>
-      :host {
-
-      }
+      :host {}
       :host:not([disable-swipe]) iron-swipeable-container2 {
         -moz-user-select: none;
         -ms-user-select: none;
@@ -57,60 +55,41 @@ Custom property | Description
       #cancelIcon {
         --iron-icon-height: 14px;
         --iron-icon-width: 14px;
-        /*vertical-align: super;*/
         margin-left: 2px;
         padding: 2px;
         @apply --app-toast-cancel-icon;
       }
+      
+      /*HACK*/
+      [hidden] {
+        display: none !important;
+      }
+
     </style>
 
     <div id="container">
-      <iron-swipeable-container2
-        id="swiper"
-        disabled="[[disableSwipe]]"
-        on-iron-swipe="__onSwiped">
-        <paper-toast
-          id="toast"
-          duration="[[duration]]"
-          on-tap="__onTap"
-          on-iron-overlay-closed="__onClosed">
+      <iron-swipeable-container2 id="swiper" disabled="[[disableSwipe]]" on-iron-swipe="__onSwiped">
+        <paper-toast id="toast" duration="[[duration]]" on-tap="__onTap" on-iron-overlay-closed="__onClosed">
 
-          <iron-icon
-            id="mainIcon"
-            icon="[[_getIcon(iconset, icon)]]"
-            src="[[src]]"
-            hidden$="[[_hideIcon(icon, src)]]">
-          </iron-icon>
+          <iron-icon id="mainIcon" icon="{{_getIcon(iconset, icon)}}" src="[[src]]" hidden$="{{_hideIcon(icon, src)}}"></iron-icon>
 
           <div class="content-container">
             <slot></slot>
             <span>[[text]]</span>
           </div>
 
-          <paper-button
-            id="actionButton"
-            on-tap="_onAction"
-            hidden$="[[!actionText]]">
+          <paper-button id="actionButton" on-tap="_onAction" hidden$="[[!actionText]]">
             [[actionText]]
           </paper-button>
 
-          <paper-button
-            id="action2Button"
-            on-tap="_onAction2"
-            hidden$="[[!action2Text]]">
+          <paper-button id="action2Button" on-tap="_onAction2" hidden$="[[!action2Text]]">
             [[action2Text]]
           </paper-button>
 
-          <iron-icon
-            id="cancelIcon"
-            icon="toast-icons:close"
-            on-tap="_cancelTapped"
-            hidden$="[[!showCancel]]">
-          </iron-icon>
+          <iron-icon id="cancelIcon" icon="toast-icons:close" on-tap="_cancelTapped" hidden$=[[!showCancel]]></iron-icon>
         </paper-toast>
       </iron-swipeable-container2>
     </div>
-
 
   </template>
   <script>
@@ -122,13 +101,15 @@ Custom property | Description
          * The src of the main iron-icon.
          */
         src: {
-          type: String
+          type: String,
+          value: ''
         },
         /**
          * The icon to use from the iconset.
          */
         icon: {
-          type: String
+          type: String,
+          value: ''
         },
 
         /**
@@ -142,7 +123,7 @@ Custom property | Description
         /**
          * The toast's text.
          */
-        text:  {
+        text: {
           type: String
         },
 
@@ -158,14 +139,16 @@ Custom property | Description
          * The text of the action button.
          */
         actionText: {
-          type: String
+          type: String,
+          value: ''
         },
 
         /**
          * The text of the action2 button.
          */
         action2Text: {
-          type: String
+          type: String,
+          value: ''
         },
 
         /**
@@ -217,7 +200,7 @@ Custom property | Description
           value: false,
           observer: '_fitBottomChanged'
         },
-        
+
         /**
          * Whether swiping should be disabled.
          */
@@ -233,7 +216,7 @@ Custom property | Description
        * The properties object can contain properties of this element
        * and the underlying paper-toast.
        */
-      show: function() {
+      show: function () {
         this.$.toast.style.opacity = 1;
         this.$.toast.show();
       },
@@ -241,36 +224,35 @@ Custom property | Description
       /**
        * Close the toast programatically.
        */
-      close: function() {
+      close: function () {
         this.$.toast.close();
       },
 
-      _cancelTapped: function(e) {
+      _cancelTapped: function (e) {
         e.stopPropagation();
         this._cancel(e);
       },
 
-      _cancel: function(e) {
+      _cancel: function (e) {
         // console.log('canceled.');
         this.$.toast.close();
         this.onCancel && this.onCancel(e);
         this.fire('toast-cancel');
       },
 
-
-      _onAction: function(e) {
+      _onAction: function (e) {
         e.stopPropagation();
         this.onAction && this.onAction(e);
         this.fire('toast-action');
       },
 
-      _onAction2: function(e) {
+      _onAction2: function (e) {
         e.stopPropagation();
         this.onAction2 && this.onAction2(e);
         this.fire('toast-action2');
       },
 
-      _fitBottomChanged: function(fitBottom) {
+      _fitBottomChanged: function (fitBottom) {
         if (fitBottom) {
           this.$.toast.classList.add('fit-bottom');
         } else {
@@ -278,22 +260,24 @@ Custom property | Description
         }
       },
 
-      _getIcon: function(iconset, icon) {
-        return (iconset && icon) ? iconset +':'+ icon : '';
+      _getIcon: function (iconset, icon) {
+        return (iconset && icon)
+          ? iconset + ':' + icon
+          : '';
       },
 
-      _hideIcon: function(icon, src) {
+      _hideIcon: function (icon, src) {
         return !(icon || src);
       },
 
-      __onSwiped: function(e, data) {
+      __onSwiped: function (e, data) {
         // console.log('swiped:');
         this.$.toast.style.opacity = 0;
         this._wasSwiped = true;
         this.close();
       },
 
-      __onClosed: function(e, data) {
+      __onClosed: function (e, data) {
         // console.log('overlay closed:', data);
         if (this._wasSwiped) {
           this._cancel(e);
@@ -302,7 +286,7 @@ Custom property | Description
         this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
       },
 
-      __onTap: function(e) {
+      __onTap: function (e) {
         // console.log('tapped', e);
         this.onTapped && this.onTapped(e);
         this.fire('toast-tap');
