@@ -246,7 +246,9 @@ Custom property | Description
       },
 
       /**
-       * Reset properties to their defaults.
+       * @deprecated
+       * Reset properties to what they were when this element
+       * was last attached.
        */
       reset: function() {
         this._setProperties(this._defaultProperties);
@@ -262,6 +264,11 @@ Custom property | Description
         this.$.toast.style.opacity = 1;
         this.$.toast.show(properties);
       },
+
+      /**
+       * Alias for `show()`
+       */
+      open: function() { this.show(); },
 
       /**
        * Close the toast programatically.
