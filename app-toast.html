@@ -90,14 +90,14 @@ Custom property | Description
 
           <paper-button
             id="actionButton"
-            on-tap="_onAction"
+            on-tap="_action1Tapped"
             hidden$="[[!actionText]]">
             [[actionText]]
           </paper-button>
 
           <paper-button
             id="action2Button"
-            on-tap="_onAction2"
+            on-tap="_action2Tapped"
             hidden$="[[!action2Text]]">
             [[action2Text]]
           </paper-button>
@@ -169,14 +169,18 @@ Custom property | Description
           },
 
           /**
+          * @deprecated use corresponding `show`/`open` argument.
+          *
           * The callback for the action button.
           */
-          onAction: {
+          onAction1: {
             type: Object,
             value: null
           },
 
           /**
+          * @deprecated use corresponding `show`/`open` argument.
+          *
           * The callback for the action2 button.
           */
           onAction2: {
@@ -185,6 +189,8 @@ Custom property | Description
           },
 
           /**
+          * @deprecated use corresponding `show`/`open` argument.
+          *
           * Called when the toast is canceled by the user by either swiping or
           * using the close icon.
           */
@@ -194,6 +200,8 @@ Custom property | Description
           },
 
           /**
+          * @deprecated use corresponding `show`/`open` argument.
+          *
           * Called when the toast is tapped, excludes action and cancel buttons.
           */
           onTapped: {
@@ -237,7 +245,7 @@ Custom property | Description
           duration: this.duration,
           actionText: this.actionText,
           action2Text: this.action2Text,
-          onAction: this.onAction,
+          onAction1: this.onAction1,
           onAction2: this.onAction2,
           onCancel: this.onCancel,
           onTapped: this.onTapped,
@@ -249,8 +257,9 @@ Custom property | Description
 
       /**
        * @deprecated
+       *
        * Reset properties to what they were when this element
-       * was last attached.
+       * was last attached/connected.
        */
       reset() {
         this._setProperties(this._defaultProperties);
@@ -261,8 +270,12 @@ Custom property | Description
        * The properties object can contain properties of this element
        * and the underlying paper-toast.
        */
-      show(properties) {
+      show(properties, onTap, onAction1, onAction2, onCancel) {
         this._setProperties(properties);
+        this.onTap = onTap;
+        this.onAction1 = onAction1;
+        this.onAction2 = onAction2;
+        this.onCancel = onCancel;
         this.$.toast.style.opacity = 1;
         this.$.toast.show(properties);
       }
@@ -270,7 +283,9 @@ Custom property | Description
       /**
        * Alias for `show()`
        */
-      open() { this.show(); }
+      open(properties, onTap, onAction1, onAction2, onCancel) {
+        this.show(properties, onTap, onAction1, onAction2, onCancel);
+      }
 
       /**
        * Close the toast programatically.
@@ -280,25 +295,26 @@ Custom property | Description
       }
 
       _cancelTapped(e) {
-        e.stopPropagation();
+        e.stopPropagation(); // removing this does not fix issue #1
         this._cancel(e);
       }
 
       _cancel(e) {
         // console.log('canceled.');
         this.$.toast.close();
+        // this.$.toast.style.opacity = 0; // (not) Fix for #1 close button fails after partial swipe
         this.onCancel && this.onCancel(e);
         this._fire('toast-cancel');
       }
 
 
-      _onAction(e) {
+      _action1Tapped(e) {
         e.stopPropagation();
-        this.onAction && this.onAction(e);
+        this.onAction1 && this.onAction1(e);
         this._fire('toast-action');
       }
 
-      _onAction2(e) {
+      _action2Tapped(e) {
         e.stopPropagation();
         this.onAction2 && this.onAction2(e);
         this._fire('toast-action2');

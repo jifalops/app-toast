@@ -20,7 +20,7 @@ bower install --save app-toast
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="app-toast.html">
-    <next-code-block></next-code-block>  
+    <next-code-block></next-code-block>
     <script>
       var toast = document.getElementById('toast');
       var icon = document.getElementById('icon');
@@ -92,3 +92,12 @@ API: [webcomponents.org](https://www.webcomponents.org/element/jifalops/app-toas
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
+
+## Changelog
+
+--- | ---
+**1.0.0** | Upgrade to ES6 classes and Polymer 2.0.
+
+**Breaking change** `onAction` is now `onAction1`
+
+**0.2.3** | Latest Polymer 1.x release.
