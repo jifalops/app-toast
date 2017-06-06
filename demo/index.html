@@ -12,14 +12,16 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../app-toast.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
+    <custom-style>
+      <style include="demo-pages-shared-styles"></style>
+    </custom-style>
   </head>
   <body>
     <div class="vertical-section-container centered">
       <h3>Basic app-toast demo</h3>
       <demo-snippet>
-        <template is="dom-bind" id="ex1">
+        <dom-bind id="ex1">
+        <template>
           <app-toast id="toast"></app-toast>
           <select id="icon">
             <option>No icon</option>
@@ -109,6 +111,7 @@
             }
           </script>
         </template>
+        </dom-bind>
       </demo-snippet>
     </div>
   </body>
