@@ -95,9 +95,7 @@ API: [webcomponents.org](https://www.webcomponents.org/element/jifalops/app-toas
 
 ## Changelog
 
+Version | Description
 --- | ---
-**1.0.0** | Upgrade to ES6 classes and Polymer 2.0.
-
-**Breaking change** `onAction` is now `onAction1`
-
+**1.0.0** | Upgrade to ES6 classes and Polymer 2.0. **Breaking change**: `onAction` is now `onAction1`.
 **0.2.3** | Latest Polymer 1.x release.

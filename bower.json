@@ -1,5 +1,6 @@
 {
   "name": "app-toast",
+  "authors": [ "Jacob Phillips (https://github.com/jifalops)"],
   "description": "A swipeable, actionable, and themable paper-toast.",
   "main": "app-toast.html",
   "dependencies": {
