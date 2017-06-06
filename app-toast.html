@@ -3,6 +3,7 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="iron-swipeable-container2.html">
 <link rel="import" href="toast-icons.html">
 
@@ -100,7 +101,7 @@ Custom property | Description
 
   </template>
   <script>
-  class AppToast extends Polymer.Element {
+  class AppToast extends Polymer.GestureEventListeners(Polymer.Element) {
 
     static get is() { return 'app-toast'; }
 
@@ -267,6 +268,14 @@ Custom property | Description
         this._wasSwiped = false;
       }
       // this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
+    }
+
+    /** Copy the Polymer 1.x fire implementation. */
+    fire(name, data, options = {}) {
+      options.detail = data;
+      if (options.bubbles === undefined) options.bubbles = true;
+      if (options.composed === undefined) options.composed = true;
+      this.dispatchEvent(new CustomEvent(name, options));
     }
   }
 
