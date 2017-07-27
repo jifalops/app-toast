@@ -5,7 +5,8 @@ A swipeable, actionable, and themable paper-toast.
 
 ## Installation
 ```
-bower install --save app-toast
+bower i -S app-toast        # Polymer 2.0 hybrid (1.x compatible)
+bower i -S app-toast#0.2.3  # Polymer 1.x based
 ```
 
 ## Usage
@@ -20,7 +21,7 @@ bower install --save app-toast
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="app-toast.html">
-    <next-code-block></next-code-block>  
+    <next-code-block></next-code-block>
     <script>
       var toast = document.getElementById('toast');
       var icon = document.getElementById('icon');
@@ -79,7 +80,6 @@ Full demo:
 | [github](https://jifalops.github.io/app-toast/components/app-toast/demo/).
 
 API: [webcomponents.org](https://www.webcomponents.org/element/jifalops/app-toast/app-toast)
-| [github](https://jifalops.github.io/app-toast).
 
 ## Contributing
 
