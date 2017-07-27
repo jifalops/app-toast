@@ -1,0 +1,43 @@
+{
+  "name": "app-toast",
+  "description": "A swipeable, actionable, and themable paper-toast.",
+  "authors": [
+    "Jacob Phillips (https://github.com/jifalops)"
+  ],
+  "license": "MIT",
+  "main": "app-toast.html",
+  "keywords": [
+    "app",
+    "toast",
+    "notification",
+    "notify",
+    "user",
+    "message",
+    "undo"
+  ],
+  "dependencies": {
+    "polymer": "^2.0.0",
+    "paper-toast": "^2.0.0",
+    "iron-flex-layout": "^2.0.0",
+    "iron-icon": "^2.0.1",
+    "paper-styles": "^2.0.0",
+    "paper-button": "^2.0.0",
+    "iron-iconset-svg": "^2.0.1"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "homepage": "https://github.com/jifalops/app-toast",
+  "_release": "36e2c39675",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "36e2c3967580a3dc704b3d042921df9703fcd3d8"
+  },
+  "_source": "https://github.com/jifalops/app-toast.git",
+  "_target": "master",
+  "_originalSource": "jifalops/app-toast",
+  "_direct": true
+}

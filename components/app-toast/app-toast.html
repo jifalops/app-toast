@@ -1,0 +1,381 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<!--<link rel="import" href="../iron-swipeable-container/iron-swipeable-container.html">-->
+<link rel="import" href="iron-swipeable-container2.html">
+<link rel="import" href="toast-icons.html">
+
+<!--
+  CSS Custom property | Description
+  ------------------- | -----------
+  `--app-toast` | Mixin applied to the internal paper-toast.
+  `--app-toast-button` | Mixin applied to the action button.
+  `--app-toast-main-icon` | Mixin applied to the main iron-icon.
+  `--app-toast-main-icon-stroke-color` | The stroke color of the main icon.
+  `--app-toast-cancel-icon` | Mixin applied to the cancel iron-icon.
+-->
+<dom-module id="app-toast">
+  <template strip-whitespace>
+    <style>
+      :host {
+
+      }
+      :host:not([disable-swipe]) iron-swipeable-container {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
+      paper-toast {
+        @apply --paper-font-body2;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --app-toast;
+      }
+      .content-container {
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }
+      paper-button {
+        color: var(--accent-color);
+        @apply --app-toast-button;
+      }
+      #mainIcon {
+        margin-right: 4px;
+        @apply --app-toast-main-icon;
+        --iron-icon-stroke-color: var(--app-toast-main-icon-stroke-color);
+      }
+      #cancelIcon {
+        --iron-icon-height: 14px;
+        --iron-icon-width: 14px;
+        /*vertical-align: super;*/
+        margin-left: 2px;
+        padding: 2px;
+        @apply --app-toast-cancel-icon;
+      }
+    </style>
+
+    <div id="container">
+      <iron-swipeable-container2
+        id="swiper"
+        disabled="[[disableSwipe]]"
+        on-iron-swipe="__onSwiped">
+
+      </iron-swipeable-container2>
+      <paper-toast
+          id="toast"
+          duration="[[duration]]"
+          on-tap="__onTap"
+          on-iron-overlay-closed="__onClosed">
+
+          <iron-icon
+            id="mainIcon"
+            icon="[[_getIcon(iconset, icon)]]"
+            src="[[src]]"
+            hidden$="[[_hideIcon(icon, src)]]">
+          </iron-icon>
+
+          <div class="content-container">
+            <slot></slot>
+            <span>[[text]]</span>
+          </div>
+
+          <paper-button
+            id="actionButton"
+            on-tap="_onAction"
+            hidden$="[[!actionText]]">
+            [[actionText]]
+          </paper-button>
+
+          <paper-button
+            id="action2Button"
+            on-tap="_onAction2"
+            hidden$="[[!action2Text]]">
+            [[action2Text]]
+          </paper-button>
+
+          <iron-icon
+            id="cancelIcon"
+            icon="toast-icons:close"
+            on-tap="_cancelTapped"
+            hidden$="[[!showCancel]]">
+          </iron-icon>
+        </paper-toast>
+    </div>
+
+
+  </template>
+  <script>
+    /**
+     * `app-toast`
+     * A swipeable, actionable, and themable paper-toast.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    Polymer({
+      is: 'app-toast',
+
+      properties: {
+        /**
+         * The src of the main iron-icon.
+         */
+        src: String,
+        /**
+         * The icon to use from the iconset.
+         */
+        icon: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * The iconset to use for icons.
+         */
+        iconset: {
+          type: String,
+          value: 'toast-icons'
+        },
+
+        /**
+         * The toast's text.
+         */
+        text: String,
+
+        /**
+         * The duration in milliseconds to show the toast.
+         */
+        duration: {
+          type: Number,
+          value: 3000
+        },
+
+        /**
+         * The text of the action button.
+         */
+        actionText: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * The text of the action2 button.
+         */
+        action2Text: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * The callback for the action button.
+         */
+        onAction: {
+          type: Object,
+          value: null
+        },
+
+        /**
+         * The callback for the action2 button.
+         */
+        onAction2: {
+          type: Object,
+          value: null
+        },
+
+        /**
+         * Called when the toast is canceled by the user by either swiping or
+         * using the close icon.
+         */
+        onCancel: {
+          type: Object,
+          value: null
+        },
+
+        /**
+         * Called when the toast is tapped, excludes action and cancel buttons.
+         */
+        onTapped: {
+          type: Object,
+          value: null
+        },
+
+        /**
+         * Whether to show the cancel icon.
+         */
+        showCancel: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Whether the toast should stretch across the bottom of its container.
+         */
+        fitBottom: {
+          type: Boolean,
+          value: false,
+          observer: '_fitBottomChanged'
+        },
+
+        /**
+         * Whether swiping should be disabled.
+         */
+        disableSwipe: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        }
+      },
+
+      attached: function() {
+        this._defaultProperties = {
+          icon: this.icon,
+          iconset: this.iconset,
+          text: this.text,
+          duration: this.duration,
+          actionText: this.actionText,
+          action2Text: this.action2Text,
+          onAction: this.onAction,
+          onAction2: this.onAction2,
+          onCancel: this.onCancel,
+          onTapped: this.onTapped,
+          showCancel: this.showCancel,
+          fitBottom: this.fitBottom,
+          disableSwipe: this.disableSwipe,
+        };
+      },
+
+      /**
+       * @deprecated
+       * Reset properties to what they were when this element
+       * was last attached.
+       */
+      reset: function() {
+        this._setProperties(this._defaultProperties);
+      },
+
+      /**
+       * Set the specified set of properties and show the toast.
+       * The properties object can contain properties of this element
+       * and the underlying paper-toast.
+       */
+      show: function(properties) {
+        this._setProperties(properties);
+        this.$.toast.style.opacity = 1;
+        Polymer.dom(this.$.swiper).appendChild(this.$.toast);
+        this.$.toast.show(properties);
+      },
+
+      /**
+       * Alias for `show()`
+       */
+      open: function() { this.show(); },
+
+      /**
+       * Close the toast programatically.
+       */
+      close: function() {
+        this.$.toast.close();
+      },
+
+      _cancelTapped: function(e) {
+        e.stopPropagation();
+        this._cancel(e);
+      },
+
+      _cancel: function(e) {
+        // console.log('canceled.');
+        this.$.toast.close();
+        this.onCancel && this.onCancel(e);
+        this.fire('toast-cancel');
+      },
+
+
+      _onAction: function(e) {
+        e.stopPropagation();
+        this.onAction && this.onAction(e);
+        this.fire('toast-action');
+      },
+
+      _onAction2: function(e) {
+        e.stopPropagation();
+        this.onAction2 && this.onAction2(e);
+        this.fire('toast-action2');
+      },
+
+      _fitBottomChanged: function(fitBottom) {
+        if (fitBottom) {
+          this.$.toast.classList.add('fit-bottom');
+        } else {
+          this.$.toast.classList.remove('fit-bottom');
+        }
+      },
+
+      _setProperties: function(properties) {
+        if (properties) {
+          for (var property in properties) {
+            if (property in this && property.indexOf('_') != 0) {
+              this[property] = properties[property];
+              delete properties[property];
+            }
+          }
+        }
+      },
+
+      _getIcon: function(iconset, icon) {
+        return (iconset && icon) ? iconset +':'+ icon : '';
+      },
+
+      _hideIcon: function(icon, src) {
+        return !(icon || src);
+      },
+
+      __onSwiped: function(e, data) {
+        // console.log('swiped:');
+        this.$.toast.style.opacity = 0;
+        this._wasSwiped = true;
+        this.close();
+      },
+
+      __onClosed: function(e, data) {
+        // console.log('overlay closed:', data);
+        if (this._wasSwiped) {
+          this._cancel(e);
+          this._wasSwiped = false;
+        }
+        this.$.toast.style.transform = 'translate3d(0, 0, 0) rotate(0)';
+      },
+
+      __onTap: function(e) {
+        // console.log('tapped', e);
+        this.onTapped && this.onTapped(e);
+        this.fire('toast-tap');
+      }
+
+      /**
+       * Triggered when the paper-toast is tapped.
+       *
+       * @event toast-tap
+       */
+      /**
+       * Triggered when the paper-toast is canceled.
+       *
+       * @event toast-cancel
+       */
+      /**
+       * Triggered when the action button is tapped.
+       *
+       * @event toast-action
+       */
+      /**
+       * Triggered when the action2 button is tapped.
+       *
+       * @event toast-action2
+       */
+    });
+  </script>
+</dom-module>
