@@ -12,103 +12,107 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../app-toast.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
+    <custom-style>
+      <style include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
   </head>
   <body>
     <div class="vertical-section-container centered">
       <h3>Basic app-toast demo</h3>
       <demo-snippet>
-        <template is="dom-bind" id="ex1">
-          <app-toast id="toast"></app-toast>
-          <select id="icon">
-            <option>No icon</option>
-            <option>check-circle</option>
-            <option>check</option>
-            <option>check-box</option>
-            <option>info</option>
-            <option>info-outline</option>
-            <option>warning</option>
-            <option>error</option>
-            <option>error-outline</option>
-          </select><br/>
-          <input id="src" placeholder="icon src" value="slack.png"/><br/>
-          <input id="htmlContent" placeholder="html content" value="<b>Content Slot</b>"/><br/>
-          <input id="text" placeholder="text" value="text"/><br/>
-          <input id="duration" placeholder="duration (ms)" value="3000"/><br/>
-          <input id="actionText" placeholder="action button text" value="action"/><br/>
-          <input id="action2Text" placeholder="action2 button text" value="action2"/><br/>
-          <label><input id="showCancel" type="checkbox"/>Show cancel</label><br/>
-          <label><input id="disableSwipe" type="checkbox"/>Disable swipe</label><br/>
-          <label><input id="fitBottom" type="checkbox"/>Fit to bottom</label><br/>
-          <button onclick="showToast()">Show</button>&nbsp;
-          <button onclick="showWithProperties()">Show with properties</button>&nbsp;
-          <button onclick="closeToast()">Close</button><br/>
-          Last Event: <span id="feedback"></span>
-          <script>
-            var toast = document.getElementById('toast');
-            var icon = document.getElementById('icon');
-            var src = document.getElementById('src');
-            var text = document.getElementById('text');
-            var duration = document.getElementById('duration');
-            var actionText = document.getElementById('actionText');
-            var action2Text = document.getElementById('action2Text');
-            var showCancel = document.getElementById('showCancel');
-            var disableSwipe = document.getElementById('disableSwipe');
-            var fitBottom = document.getElementById('fitBottom');
-            var feedback = document.getElementById('feedback');
+        <dom-bind id="ex1">
+          <template>
+            <app-toast id="toast"></app-toast>
+            <select id="icon">
+              <option>No icon</option>
+              <option>check-circle</option>
+              <option>check</option>
+              <option>check-box</option>
+              <option>info</option>
+              <option>info-outline</option>
+              <option>warning</option>
+              <option>error</option>
+              <option>error-outline</option>
+            </select><br/>
+            <input id="src" placeholder="icon src" value="slack.png"/><br/>
+            <input id="htmlContent" placeholder="html content" value="<b>Content Slot</b>"/><br/>
+            <input id="text" placeholder="text" value="text"/><br/>
+            <input id="duration" placeholder="duration (ms)" value="3000"/><br/>
+            <input id="actionText" placeholder="action button text" value="action"/><br/>
+            <input id="action2Text" placeholder="action2 button text" value="action2"/><br/>
+            <label><input id="showCancel" type="checkbox"/>Show cancel</label><br/>
+            <label><input id="disableSwipe" type="checkbox"/>Disable swipe</label><br/>
+            <label><input id="fitBottom" type="checkbox"/>Fit to bottom</label><br/>
+            <button onclick="showToast()">Show</button>&nbsp;
+            <button onclick="showWithProperties()">Show with properties</button>&nbsp;
+            <button onclick="closeToast()">Close</button><br/>
+            Last Event: <span id="feedback"></span>
+            <script>
+              var toast = document.getElementById('toast');
+              var icon = document.getElementById('icon');
+              var src = document.getElementById('src');
+              var text = document.getElementById('text');
+              var duration = document.getElementById('duration');
+              var actionText = document.getElementById('actionText');
+              var action2Text = document.getElementById('action2Text');
+              var showCancel = document.getElementById('showCancel');
+              var disableSwipe = document.getElementById('disableSwipe');
+              var fitBottom = document.getElementById('fitBottom');
+              var feedback = document.getElementById('feedback');
 
-            var htmlContent = document.getElementById('htmlContent');
-            var div = document.createElement('div');
-            Polymer.dom(toast).appendChild(div);
+              var htmlContent = document.getElementById('htmlContent');
+              var div = document.createElement('div');
+              Polymer.dom(toast).appendChild(div);
 
-            toast.addEventListener('toast-tap', function() { feedback.innerText += ', on-toast-tap'; });
-            toast.addEventListener('toast-cancel', function() { feedback.innerText += ', on-toast-cancel'; });
-            toast.addEventListener('toast-action', function() { feedback.innerText += ', on-toast-action'; });
-            toast.addEventListener('toast-action2', function() { feedback.innerText += ', on-toast-action2'; });
+              toast.addEventListener('toast-tap', function() { feedback.innerText += ', on-toast-tap'; });
+              toast.addEventListener('toast-cancel', function() { feedback.innerText += ', on-toast-cancel'; });
+              toast.addEventListener('toast-action', function() { feedback.innerText += ', on-toast-action'; });
+              toast.addEventListener('toast-action2', function() { feedback.innerText += ', on-toast-action2'; });
 
-            function showToast() {
-              div.innerHTML = htmlContent.value;
-              var tmp = icon.options[icon.selectedIndex].text;
-              toast.icon = tmp == 'No icon' ? '' : tmp;
-              toast.src = src.value;
-              toast.text = text.value;
-              toast.duration = Number(duration.value);
-              toast.actionText = actionText.value;
-              toast.action2Text = action2Text.value;
-              toast.showCancel = showCancel.checked;
-              toast.disableSwipe = disableSwipe.checked;
-              toast.fitBottom = fitBottom.checked;
-              toast.onAction = function() { feedback.innerText = "onAction()"; };
-              toast.onAction2 = function() { feedback.innerText = "onAction2()"; };
-              toast.onCancel = function() { feedback.innerText = "onCancel()"; };
-              toast.onTapped = function() { feedback.innerText = "onTapped()"; };
-              toast.show();
-            }
-            function showWithProperties() {
-              div.innerHTML = htmlContent.value;
-              var tmp = icon.options[icon.selectedIndex].text;
-              toast.show({
-                icon: tmp == 'No icon' ? '' : tmp,
-                src: src.value,
-                text: text.value,
-                duration: Number(duration.value),
-                actionText: actionText.value,
-                action2Text: action2Text.value,
-                showCancel: showCancel.checked,
-                disableSwipe: disableSwipe.checked,
-                fitBottom: fitBottom.checked,
-                onAction: function() { feedback.innerText = "onAction()"; },
-                onAction2: function() { feedback.innerText = "onAction2()"; },
-                onCancel: function() { feedback.innerText = "onCancel()"; },
-                onTapped: function() { feedback.innerText = "onTapped()"; }
-              });
-            }
-            function closeToast() {
-              toast.close();
-            }
-          </script>
-        </template>
+              function showToast() {
+                div.innerHTML = htmlContent.value;
+                var tmp = icon.options[icon.selectedIndex].text;
+                toast.icon = tmp == 'No icon' ? '' : tmp;
+                toast.src = src.value;
+                toast.text = text.value;
+                toast.duration = Number(duration.value);
+                toast.actionText = actionText.value;
+                toast.action2Text = action2Text.value;
+                toast.showCancel = showCancel.checked;
+                toast.disableSwipe = disableSwipe.checked;
+                toast.fitBottom = fitBottom.checked;
+                toast.onAction = function() { feedback.innerText = "onAction()"; };
+                toast.onAction2 = function() { feedback.innerText = "onAction2()"; };
+                toast.onCancel = function() { feedback.innerText = "onCancel()"; };
+                toast.onTapped = function() { feedback.innerText = "onTapped()"; };
+                toast.show();
+              }
+              function showWithProperties() {
+                div.innerHTML = htmlContent.value;
+                var tmp = icon.options[icon.selectedIndex].text;
+                toast.show({
+                  icon: tmp == 'No icon' ? '' : tmp,
+                  src: src.value,
+                  text: text.value,
+                  duration: Number(duration.value),
+                  actionText: actionText.value,
+                  action2Text: action2Text.value,
+                  showCancel: showCancel.checked,
+                  disableSwipe: disableSwipe.checked,
+                  fitBottom: fitBottom.checked,
+                  onAction: function() { feedback.innerText = "onAction()"; },
+                  onAction2: function() { feedback.innerText = "onAction2()"; },
+                  onCancel: function() { feedback.innerText = "onCancel()"; },
+                  onTapped: function() { feedback.innerText = "onTapped()"; }
+                });
+              }
+              function closeToast() {
+                toast.close();
+              }
+            </script>
+          </template>
+        </dom-bind>
       </demo-snippet>
     </div>
   </body>

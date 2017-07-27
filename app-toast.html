@@ -4,31 +4,26 @@
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<!--<link rel="import" href="../iron-swipeable-container/iron-swipeable-container.html">-->
 <link rel="import" href="iron-swipeable-container2.html">
 <link rel="import" href="toast-icons.html">
 
 <!--
-`app-toast`
-A swipeable, actionable, and themable paper-toast.
-
-Custom property | Description
-----------------|-------------
-`--app-toast` | Mixin applied to the internal paper-toast.
-`--app-toast-button` | Mixin applied to the action button.
-`--app-toast-main-icon` | Mixin applied to the main iron-icon.
-`--app-toast-main-icon-stroke-color` | The stroke color of the main icon.
-`--app-toast-cancel-icon` | Mixin applied to the cancel iron-icon.
-
-@demo demo/index.html
+  CSS Custom property | Description
+  ------------------- | -----------
+  `--app-toast` | Mixin applied to the internal paper-toast.
+  `--app-toast-button` | Mixin applied to the action button.
+  `--app-toast-main-icon` | Mixin applied to the main iron-icon.
+  `--app-toast-main-icon-stroke-color` | The stroke color of the main icon.
+  `--app-toast-cancel-icon` | Mixin applied to the cancel iron-icon.
 -->
-
 <dom-module id="app-toast">
-  <template>
+  <template strip-whitespace>
     <style>
       :host {
 
       }
-      :host:not([disable-swipe]) iron-swipeable-container2 {
+      :host:not([disable-swipe]) iron-swipeable-container {
         -moz-user-select: none;
         -ms-user-select: none;
         -webkit-user-select: none;
@@ -69,7 +64,9 @@ Custom property | Description
         id="swiper"
         disabled="[[disableSwipe]]"
         on-iron-swipe="__onSwiped">
-        <paper-toast
+
+      </iron-swipeable-container2>
+      <paper-toast
           id="toast"
           duration="[[duration]]"
           on-tap="__onTap"
@@ -108,12 +105,19 @@ Custom property | Description
             hidden$="[[!showCancel]]">
           </iron-icon>
         </paper-toast>
-      </iron-swipeable-container2>
     </div>
 
 
   </template>
   <script>
+    /**
+     * `app-toast`
+     * A swipeable, actionable, and themable paper-toast.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
     Polymer({
       is: 'app-toast',
 
@@ -262,6 +266,7 @@ Custom property | Description
       show: function(properties) {
         this._setProperties(properties);
         this.$.toast.style.opacity = 1;
+        Polymer.dom(this.$.swiper).appendChild(this.$.toast);
         this.$.toast.show(properties);
       },
 

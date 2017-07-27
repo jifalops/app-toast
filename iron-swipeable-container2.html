@@ -60,7 +60,7 @@ want to be swiped:
         display: block;
       }
     </style>
-    <content id="content"></content>
+    <slot id="content"></slot>
   </template>
 </dom-module>
 
@@ -254,7 +254,7 @@ want to be swiped:
       var target = event.currentTarget;
 
       if (this._swipeComplete && event.propertyName === 'opacity') {
-        // Polymer.dom(this).removeChild(target);
+        Polymer.dom(this).removeChild(target);
         this.fire('iron-swipe',
             { direction: this._direction > 0 ? 'right' : 'left',
               target:target
