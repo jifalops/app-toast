@@ -21,6 +21,26 @@ bower i -S app-toast#0.2.3  # Polymer 1.x based
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="app-toast.html">
+    <custom-style>
+      <style is="custom-style">
+        app-toast.styled {
+          --app-toast: {
+            color: red;
+            background-color: #888;
+          };
+          --app-toast-button: {
+            color: blue;
+          };
+          --app-toast-main-icon: {
+            color: green;
+          };
+          --app-toast-main-icon-stroke-color: orange;
+          --app-toast-cancel-icon: {
+            color: purple;
+          };
+        }
+      </style>
+    </custom-style>
     <next-code-block></next-code-block>
     <script>
       var toast = document.getElementById('toast');
@@ -31,6 +51,7 @@ bower i -S app-toast#0.2.3  # Polymer 1.x based
       var showCancel = document.getElementById('showCancel');
       var disableSwipe = document.getElementById('disableSwipe');
       var fitBottom = document.getElementById('fitBottom');
+      var styled = document.getElementById('styled');
       var feedback = document.getElementById('feedback');
       function showToast() {
         var tmp = icon.options[icon.selectedIndex].text;
@@ -43,6 +64,8 @@ bower i -S app-toast#0.2.3  # Polymer 1.x based
         toast.fitBottom = fitBottom.checked;
         toast.onAction = function() { feedback.innerText = "onAction()"; };
         toast.onCancel = function() { feedback.innerText = "onCancel()"; };
+        if (styled.checked) toast.classList.add('styled');
+        else toast.classList.remove('styled');
         toast.show();
       }
     </script>
@@ -70,6 +93,7 @@ bower i -S app-toast#0.2.3  # Polymer 1.x based
 <label><input id="showCancel" type="checkbox"/>Show cancel</label><br/>
 <label><input id="disableSwipe" type="checkbox"/>Disable swipe</label><br/>
 <label><input id="fitBottom" type="checkbox"/>Fit to bottom</label><br/>
+<label><input id="styled" type="checkbox"/>Styled</label><br/>
 <button onclick="showToast()">Show</button>&nbsp;
 <button onclick="toast.close()">Close</button><br/>
 Last Event: <span id="feedback"></span>

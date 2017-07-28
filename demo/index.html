@@ -14,12 +14,29 @@
 
     <custom-style>
       <style include="demo-pages-shared-styles">
+        app-toast.styled {
+          --app-toast: {
+            color: red;
+            background-color: #888;
+          };
+          --app-toast-button: {
+            color: blue;
+          };
+          --app-toast-main-icon: {
+            color: green;
+          };
+          --app-toast-main-icon-stroke-color: orange;
+          --app-toast-cancel-icon: {
+            color: purple;
+          };
+        }
       </style>
     </custom-style>
   </head>
   <body>
     <div class="vertical-section-container centered">
       <h3>Basic app-toast demo</h3>
+      <p>The demo applies styles to the toast.</p>
       <demo-snippet>
         <dom-bind id="ex1">
           <template>
@@ -44,6 +61,7 @@
             <label><input id="showCancel" type="checkbox"/>Show cancel</label><br/>
             <label><input id="disableSwipe" type="checkbox"/>Disable swipe</label><br/>
             <label><input id="fitBottom" type="checkbox"/>Fit to bottom</label><br/>
+            <label><input id="styled" type="checkbox"/>Styled</label><br/>
             <button onclick="showToast()">Show</button>&nbsp;
             <button onclick="showWithProperties()">Show with properties</button>&nbsp;
             <button onclick="closeToast()">Close</button><br/>
@@ -59,6 +77,7 @@
               var showCancel = document.getElementById('showCancel');
               var disableSwipe = document.getElementById('disableSwipe');
               var fitBottom = document.getElementById('fitBottom');
+              var styled = document.getElementById('styled');
               var feedback = document.getElementById('feedback');
 
               var htmlContent = document.getElementById('htmlContent');
@@ -86,11 +105,15 @@
                 toast.onAction2 = function() { feedback.innerText = "onAction2()"; };
                 toast.onCancel = function() { feedback.innerText = "onCancel()"; };
                 toast.onTapped = function() { feedback.innerText = "onTapped()"; };
+                if (styled.checked) toast.classList.add('styled');
+                else toast.classList.remove('styled');
                 toast.show();
               }
               function showWithProperties() {
                 div.innerHTML = htmlContent.value;
                 var tmp = icon.options[icon.selectedIndex].text;
+                if (styled.checked) toast.classList.add('styled');
+                else toast.classList.remove('styled');
                 toast.show({
                   icon: tmp == 'No icon' ? '' : tmp,
                   src: src.value,
